@@ -5,5 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    From the homepage
+    {% for post in posts %}
+        {{ post.text }} written at {{ post.date }}
+        <hr>
+    {% endfor %}
 {% endblock %}
