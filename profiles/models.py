@@ -22,4 +22,4 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     """Create a new Profile() object when a Django User is created."""
     if created:
-        Profile.objects.create(user=instance) 
+        Profile.objects.create(user=instance)
