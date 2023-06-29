@@ -1,6 +1,3 @@
-console.log("Hello world")
-console.log("Hello this is frontend")
-
 $.ajaxSetup({
     beforeSend: function beforeSend(xhr, settings) {
         function getCookie(name) {
@@ -30,3 +27,8 @@ $.ajaxSetup({
         }
     },
 });
+
+$(document).on("click", ".js-toggle-modal", function(e) {
+    e.preventDefault()
+    $(".js-modal").toggleClass("hidden")
+})
