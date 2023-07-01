@@ -1,8 +1,7 @@
-from typing import Any, Dict
 from django.contrib.auth.models import User
 from django.views.generic import DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 
 from feed.models import Post
 from followers.models import Follower
@@ -18,10 +17,12 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         user = self.get_object()
-        context =  super().get_context_data(**kwargs)
-        context ['total_posts'] = Post.objects.filter(author=user).count()
+        context = super().get_context_data(**kwargs)
+        context['total_posts'] = Post.objects.filter(author=user).count()
+        # context['total_followers'] = ...
         return context
-    
+
+
 class FollowView(LoginRequiredMixin, View):
     http_method_names = ["post"]
 
@@ -30,18 +31,20 @@ class FollowView(LoginRequiredMixin, View):
 
         if "action" not in data or "username" not in data:
             return HttpResponseBadRequest("Missing data")
-        
+
         try:
-            other_user = User.objects.get(username=['username'])
+            other_user = User.objects.get(username=data['username'])
         except User.DoesNotExist:
-            return HttpResponseBadRequest("Mission user")
-        
+            return HttpResponseBadRequest("Missing user")
+
         if data['action'] == "follow":
+            # Follow
             follower, created = Follower.objects.get_or_create(
                 followed_by=request.user,
                 following=other_user
             )
         else:
+            # Unfollow
             try:
                 follower = Follower.objects.get(
                     followed_by=request.user,
@@ -51,7 +54,7 @@ class FollowView(LoginRequiredMixin, View):
                 follower = None
 
             if follower:
-                follower.delete()            
+                follower.delete()
 
         return JsonResponse({
             'success': True,

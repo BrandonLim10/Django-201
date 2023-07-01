@@ -34,11 +34,10 @@ $(document).on("click", ".js-toggle-modal", function(e) {
 })
 .on("click", ".js-submit", function(e) {
     e.preventDefault()
-    console.log("Submit me?")
     const text = $(".js-post-text").val().trim()
     const $btn = $(this)
 
-    if(!text.length){
+    if(!text.length) {
         return false
     }
 
@@ -73,17 +72,19 @@ $(document).on("click", ".js-toggle-modal", function(e) {
             username: $(this).data("username"),
         },
         success: (data) => {
-            $("js-follow-text").text(data.wording)
+            $(".js-follow-text").text(data.wording)
             if(action == "follow") {
+                // Change wording to unfollow
                 console.log("DEBUG", "unfollow")
                 $(this).attr("data-action", "unfollow")
             } else {
+                // The opposite
                 console.log("DEBUG", "follow")
                 $(this).attr("data-action", "follow")
             }
         },
         error: (error) => {
             console.warn(error)
-        } 
+        }
     });
 })
