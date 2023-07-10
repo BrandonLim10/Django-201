@@ -22,6 +22,7 @@ from django.urls import path
 from django.urls import re_path as url
 from feed import urls as feed_urls
 from profiles import urls as profiles_urls
+from profiles import views as profile_views
 
 
 
@@ -31,4 +32,5 @@ urlpatterns = [
     path("", include(feed_urls, namespace="feed")), 
     path("profile/", include(profiles_urls, namespace="profiles")), 
     url("", include("allauth.urls")),
+    path("update/", profile_views.profile, name="profile_update"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
